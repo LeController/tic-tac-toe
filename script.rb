@@ -4,11 +4,29 @@ class TicTacToe
   end
   
   def pick_symbols
-    puts "Pick Player 1's symbol"
-    @player1Symbol = gets.chomp
+    loop do
+      puts "Pick Player 1's symbol"
+      @player1Symbol = gets.chomp[0]
+      if ['1','2','3','4','5','6','7','8','9'].include? @player1Symbol
+        puts "Symbol must not be a number!"
+      end
+    break if !['1','2','3','4','5','6','7','8','9'].include? @player1Symbol
+    end
+
+    puts "Player 1 is #{@player1Symbol}."
     
-    puts "Pick Player 2's symbol"
-    @player2Symbol = gets.chomp
+    loop do
+      puts "Pick Player 2's symbol"
+      @player2Symbol = gets.chomp[0]
+      if ['1','2','3','4','5','6','7','8','9'].include? @player1Symbol
+        puts "Symbol must not be a number!"
+      elsif @player2Symbol == @player1Symbol
+        puts "Symbol must not be the same as Player 1!"
+      end
+    break if !['1','2','3','4','5','6','7','8','9',@player1Symbol].include? @player2Symbol
+    end
+
+    puts "Player 2 is #{@player2Symbol}."
   end
 
   attr_reader :player1Symbol
@@ -26,10 +44,6 @@ class TicTacToe
     puts "CURRENT BOARD"
     puts @board
     puts "\n"
-  end
-
-  def get_board_position(number)
-    puts @board[number]
   end
 
   def play_turn(player_symbol, grid_number)
@@ -52,6 +66,11 @@ def check_victory(player_symbol, board)
   end 
 end
 
+def board_full?(board)
+  ['1','2','3','4','5','6','7','8','9'].none? {|num| board.include?(num)}
+end
+
+
 game = TicTacToe.new()
 game.pick_symbols()
 puts game.create_board
@@ -66,8 +85,12 @@ while victory == false do
       input = gets.chomp.to_i
 
       if input >= 1 && input <= 9
-        game.play_turn(game.player1Symbol, input.to_s)
-        break
+        if game.board.include?(input.to_s)
+          game.play_turn(game.player1Symbol, input.to_s)
+          break
+        else
+          puts "SQUARE HAS ALREADY BEEN PLAYED"
+        end
       end
     end
   
@@ -78,6 +101,11 @@ while victory == false do
   
   game.get_board
   
+  if board_full?(game.board)
+    victory = true
+    puts "GAME IS TIED"
+    break
+  end
 
   if !check_victory(game.player1Symbol, game.board)
 
@@ -86,8 +114,12 @@ while victory == false do
       input = gets.chomp.to_i
 
       if input >= 1 && input <= 9
-        game.play_turn(game.player2Symbol, input.to_s)
-        break
+        if game.board.include?(input.to_s)
+          game.play_turn(game.player2Symbol, input.to_s)
+          break
+        else
+          puts "SQUARE HAS ALREADY BEEN PLAYED"
+        end
       end
     end
 
@@ -98,5 +130,4 @@ while victory == false do
 
   game.get_board
   
-
 end
