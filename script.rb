@@ -101,13 +101,15 @@ while victory == false do
   
   game.get_board
   
-  if board_full?(game.board)
-    victory = true
-    puts "GAME IS TIED"
-    break
-  end
+  
 
   if !check_victory(game.player1Symbol, game.board)
+
+    if board_full?(game.board)
+      victory = true
+      puts "GAME IS TIED"
+      break
+    end
 
     while true do
       puts "PLAYER 2 (#{game.player2Symbol}): PICK A GRID SQUARE (1-9)"
