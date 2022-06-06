@@ -70,66 +70,77 @@ def board_full?(board)
   ['1','2','3','4','5','6','7','8','9'].none? {|num| board.include?(num)}
 end
 
+def new_game
+  game = TicTacToe.new()
+  game.pick_symbols()
+  puts game.create_board
 
-game = TicTacToe.new()
-game.pick_symbols()
-puts game.create_board
+  victory = false
+  while victory == false do
 
-victory = false
-while victory == false do
+    if !check_victory(game.player2Symbol, game.board)
 
-  if !check_victory(game.player2Symbol, game.board)
+      while true do
+        puts "PLAYER 1 (#{game.player1Symbol}): PICK A GRID SQUARE (1-9)"
+        input = gets.chomp.to_i
 
-    while true do
-      puts "PLAYER 1 (#{game.player1Symbol}): PICK A GRID SQUARE (1-9)"
-      input = gets.chomp.to_i
-
-      if input >= 1 && input <= 9
-        if game.board.include?(input.to_s)
-          game.play_turn(game.player1Symbol, input.to_s)
-          break
-        else
-          puts "SQUARE HAS ALREADY BEEN PLAYED"
+        if input >= 1 && input <= 9
+          if game.board.include?(input.to_s)
+            game.play_turn(game.player1Symbol, input.to_s)
+            break
+          else
+            puts "SQUARE HAS ALREADY BEEN PLAYED"
+          end
         end
       end
-    end
-  
-  else
-    victory = true
-    break
-  end
-  
-  game.get_board
-  
-  
-
-  if !check_victory(game.player1Symbol, game.board)
-
-    if board_full?(game.board)
+    
+    else
       victory = true
-      puts "GAME IS TIED"
+      break
+    end
+    
+    game.get_board
+    
+    
+
+    if !check_victory(game.player1Symbol, game.board)
+
+      if board_full?(game.board)
+        victory = true
+        puts "GAME IS TIED"
+        break
+      end
+
+      while true do
+        puts "PLAYER 2 (#{game.player2Symbol}): PICK A GRID SQUARE (1-9)"
+        input = gets.chomp.to_i
+
+        if input >= 1 && input <= 9
+          if game.board.include?(input.to_s)
+            game.play_turn(game.player2Symbol, input.to_s)
+            break
+          else
+            puts "SQUARE HAS ALREADY BEEN PLAYED"
+          end
+        end
+      end
+
+    else
+      victory = true
       break
     end
 
-    while true do
-      puts "PLAYER 2 (#{game.player2Symbol}): PICK A GRID SQUARE (1-9)"
-      input = gets.chomp.to_i
+    game.get_board
+    
+  end
+end
 
-      if input >= 1 && input <= 9
-        if game.board.include?(input.to_s)
-          game.play_turn(game.player2Symbol, input.to_s)
-          break
-        else
-          puts "SQUARE HAS ALREADY BEEN PLAYED"
-        end
-      end
-    end
-
+while true
+  puts "\nWould you like to play Tic-Tac-Toe?"
+  input = gets.chomp[0]
+  if input[0].downcase == 'y'
+    new_game
   else
-    victory = true
     break
   end
-
-  game.get_board
-  
 end
